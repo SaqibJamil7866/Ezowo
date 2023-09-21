@@ -1,7 +1,9 @@
 // ** React Imports
-import { useContext } from 'react'
+import { useContext, lazy } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { List } from 'react-feather'
-import { Row, Col, Card, CardHeader, CardTitle, CardBody } from 'reactstrap'
+import { Row, Col, Card, CardHeader, CardTitle, CardBody, Modal, ModalHeader, ModalBody, ModalFooter,
+  Button } from 'reactstrap'
 // ** Custom Components
 // import Avatar from '@components/avatar'
 // import Timeline from '@components/timeline'
@@ -25,10 +27,15 @@ import RecentProjects from './RecentProjects'
 import ProjectActivities from '../../apps/project/view/Activities'
 import Announcements from '../../apps/project/view/Announcements'
 import DashboardTasks from './DashboardTasks'
+import { handleStickyNotes } from '@store/navbar'
+
+const StickyNotes = lazy(() => import('../../apps/sticky-notes'))
 
 const AnalyticsDashboard = () => {
   // ** Context
-  const { colors } = useContext(ThemeColors)
+  const { colors } = useContext(ThemeColors);
+  const dispatch = useDispatch();
+  const store = useSelector(state => state.navbar);
 
   const userId = JSON.parse(localStorage?.userData)?.id || 0
 
@@ -181,6 +188,23 @@ const AnalyticsDashboard = () => {
             </Card>
           </Col>
       </Row>
+
+      {/* Stick Notes modal */}
+      <Modal
+        isOpen={store.isOpenStickyNotes}
+        className='modal-dialog-centered'
+        onClosed={() => dispatch(handleStickyNotes(false))}
+      >
+        <ModalHeader>Sticky Notes</ModalHeader>
+        <ModalBody>
+          <StickyNotes />
+        </ModalBody>
+        <ModalFooter>
+          <Button color='flat-danger' onClick={() => dispatch(handleStickyNotes(false))}>
+            Cancel
+          </Button>
+        </ModalFooter>
+      </Modal>
     </div>
   )
 }

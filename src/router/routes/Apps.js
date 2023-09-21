@@ -4,7 +4,6 @@ import { Navigate } from 'react-router-dom'
 
 const TaskDetail = lazy(() => import('../../views/apps/project/view/TaskDetail'))
 const BillingTab = lazy(() => import('../../views/apps/user/view/BillingTab'))
-const StickyNote = lazy(() => import('../../views/apps/sticky-notes'))
 const Chat = lazy(() => import('../../views/apps/chat'))
 const Todo = lazy(() => import('../../views/apps/todo'))
 const Email = lazy(() => import('../../views/apps/email'))
@@ -115,13 +114,6 @@ const AppRoutes = [
     path: `${process.env.PUBLIC_URL}/apps/kanban`,
     meta: {
       // appLayout: true,
-      className: 'kanban-application'
-    }
-  },
-  {
-    element: <StickyNote />,
-    path: `${process.env.PUBLIC_URL}/apps/sticky_notes`,
-    meta: {
       className: 'kanban-application'
     }
   },

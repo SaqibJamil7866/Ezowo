@@ -8,14 +8,17 @@ import NotificationDropdown from './NotificationDropdown'
 
 // ** Third Party Components
 import { Sun, Moon, File } from 'react-feather'
+import { useDispatch } from 'react-redux'
 
 // ** Reactstrap Imports
 import { NavItem, NavLink } from 'reactstrap'
+import { handleStickyNotes } from '@store/navbar'
 
 const NavbarUser = props => {
   // ** Props
   const { skin, setSkin } = props
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   // ** Function to toggle Theme (Light/Dark)
   const ThemeToggler = () => {
@@ -27,7 +30,7 @@ const NavbarUser = props => {
   }
 
   const openStickyNotes = () => {
-    navigate(`${process.env.PUBLIC_URL}/apps/sticky_notes`)
+    dispatch(handleStickyNotes(true))
   }
 
   return (

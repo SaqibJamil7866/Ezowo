@@ -4,7 +4,7 @@ import '@styles/react/apps/app-kanban.scss'
 import { Row, Col, Card, Label, CardBody, CardTitle, CardHeader } from 'reactstrap'
 import { getAllTaskStatus, getAllProjectTasks, getAllProjects } from "../../../services/Apis"
 
-const StickyNote = () => {
+const StickyNotes = () => {
   
     const [boards, setBoards] = useState([])
     const [notes, setNotes] = useState([
@@ -75,4 +75,4 @@ const StickyNote = () => {
     )
 }
 
-export default StickyNote
+export default StickyNotes

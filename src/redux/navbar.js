@@ -26,15 +26,19 @@ export const updateBookmarked = createAsyncThunk('layout/updateBookmarked', asyn
 })
 
 export const layoutSlice = createSlice({
-  name: 'layout',
+  name: 'navbar',
   initialState: {
     query: '',
     bookmarks: [],
-    suggestions: []
+    suggestions: [],
+    isOpenStickyNotes: false
   },
   reducers: {
     handleSearchQuery: (state, action) => {
       state.query = action.payload
+    },
+    handleStickyNotes: (state, action) => {
+      state.isOpenStickyNotes = action.payload
     }
   },
   extraReducers: builder => {
@@ -66,6 +70,6 @@ export const layoutSlice = createSlice({
   }
 })
 
-export const { handleSearchQuery } = layoutSlice.actions
+export const { handleSearchQuery, handleStickyNotes } = layoutSlice.actions
 
 export default layoutSlice.reducer
