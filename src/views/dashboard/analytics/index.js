@@ -192,6 +192,8 @@ const AnalyticsDashboard = () => {
       {/* Stick Notes modal */}
       <Modal
         isOpen={store.isOpenStickyNotes}
+        scrollable={true}
+        size='lg'
         className='modal-dialog-centered'
         onClosed={() => dispatch(handleStickyNotes(false))}
       >
