@@ -1,7 +1,7 @@
 // ** React Imports
 import { useState, useEffect, Fragment } from 'react'
 import toast from 'react-hot-toast'
-import { Input, Button, FormText, DropdownMenu, DropdownItem, DropdownToggle, UncontrolledDropdown } from 'reactstrap'
+import { Input,Card, CardBody,  Button, FormText, DropdownMenu, DropdownItem, DropdownToggle, UncontrolledDropdown } from 'reactstrap'
 
 // ** Third Party Imports
 import { ReactSortable } from 'react-sortablejs'
@@ -75,6 +75,7 @@ const KanbanBoard = props => {
             style={{backgroundColor: '#ededed', padding: '1px 10px', borderRadius: '10px'}}
           >
             {tasks.map((task, index) => {
+              {console.log('task: ', task.boardId, board.id)}
               if (task.boardId === board.id) {
                 return (
                   <KanbanTasks
@@ -85,7 +86,10 @@ const KanbanBoard = props => {
                   />
                 )
               } else {
-                return <Fragment key={`${task.boardId}-${index}`}></Fragment>
+                return <Fragment key={`${task.boardId}-${index}`}>
+                  <Card className='task'>
+                  </Card>
+                </Fragment>
               }
             })}
           </ReactSortable>
