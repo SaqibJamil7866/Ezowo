@@ -51,7 +51,8 @@ const Timeline = props => {
                 ) : null}
               </div>
               <p
-                className={classnames({
+                style={{background: '#f4e8e8'}}
+                className={classnames('p-1',{
                   'mb-0': i === data.length - 1 && !item.customContent
                 })}
               >

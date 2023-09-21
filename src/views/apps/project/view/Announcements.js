@@ -7,6 +7,7 @@ import AnnouncementTimeline from '@components/timeline/AnnouncementLine'
 // import { Card, CardHeader, CardTitle, CardBody } from 'reactstrap'
 
 import { getAnnouncements } from "../../../../services/Apis"
+import moment from 'moment'
 
 // const data = [
 //   {
@@ -54,7 +55,7 @@ const Announcements = ({userId}) => {
   const [announcements, setAnnouncements] = useState([])
   const formatData = (data) => {
     const jsonData = data.map((item) => {
-      return { ...item, meta: `Sent by ${item?.user?.first_name} at ${item.created}`, title: item.title, content: item.details, color: '' }
+      return { ...item, meta: `Sent by ${item?.user?.first_name} at ${moment(item.created).format('DD/MM/YYYY hh:mm A')}`, title: item.title, content: item.details, color: '' }
     })
     setAnnouncements(jsonData)
   }

@@ -7,6 +7,7 @@ import Timeline from '@components/timeline'
 // import { Card, CardHeader, CardTitle, CardBody } from 'reactstrap'
 
 import { getProjectActivities } from "../../../../services/Apis"
+import moment from 'moment'
 
 // const data = [
 //   {
@@ -89,7 +90,7 @@ const Activities = ({projectId, userId, limit, comingFrom}) => {
     const jsonData = data.filter(function (dt) {
         return dt.entity !== "ProjectAnnouncements"
       }).map((item) => {
-        return { ...item, meta: item.created, title: `${formatEntity(item.entity)} ${item.action}d`, content: `${item?.actor?.first_name  } ${ item.actor?.last_name  } ${item.action  }d a ${formatEntity(item.entity)}`, color: formatColor(item.action) }
+        return { ...item, meta: moment(item.created).format('DD/MM/YYYY hh:mm A'), title: `${formatEntity(item.entity)} ${item.action}d`, content: `${item?.actor?.first_name  } ${ item.actor?.last_name  } ${item.action  }d a ${formatEntity(item.entity)}`, color: formatColor(item.action) }
     })
     setActivities(jsonData)
   }

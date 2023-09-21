@@ -134,7 +134,7 @@ const AuthenticationRoutes = [
     }
   },
   {
-    path: `${process.env.PUBLIC_URL}/pages/getting-know-questions`,
+    path: `${process.env.PUBLIC_URL}/getting-know-questions`,
     element: <GettingKnowQuestions />,
     meta: {
       layout: 'blank'
