@@ -1,8 +1,9 @@
 // ** React Imports
 import { lazy } from 'react'
 import { Navigate } from 'react-router-dom'
-import TaskDetail from '../../views/apps/project/view/TaskDetail'
 
+const TaskDetail = lazy(() => import('../../views/apps/project/view/TaskDetail'))
+const BillingTab = lazy(() => import('../../views/apps/user/view/BillingTab'))
 const StickyNote = lazy(() => import('../../views/apps/sticky-notes'))
 const Chat = lazy(() => import('../../views/apps/chat'))
 const Todo = lazy(() => import('../../views/apps/todo'))
@@ -120,6 +121,14 @@ const AppRoutes = [
   {
     element: <StickyNote />,
     path: `${process.env.PUBLIC_URL}/apps/sticky_notes`,
+    meta: {
+      className: 'kanban-application'
+    }
+  },
+  {
+    element: <BillingTab />,
+    // element: <BillingTabContent />,
+    path: `${process.env.PUBLIC_URL}/apps/billing_plan`,
     meta: {
       className: 'kanban-application'
     }

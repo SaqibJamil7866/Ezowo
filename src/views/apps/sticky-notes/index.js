@@ -35,19 +35,19 @@ const StickyNote = () => {
     ])
   
     const getBoards = () => {
-        getAllTaskStatus().then((res) => {
-            const result = res.response
-            if (
-            result &&
-            (result.code === 200 || result.code === 400) &&
-            result.data
-            ) {
-            const boardData = result.data.map((item) => {
-                return { ...item, id: item.value, realId: item.id }
-            })
-            setBoards(boardData)
-            }
-        })
+        // getAllTaskStatus().then((res) => {
+        //     const result = res.response
+        //     if (
+        //     result &&
+        //     (result.code === 200 || result.code === 400) &&
+        //     result.data
+        //     ) {
+        //     const boardData = result.data.map((item) => {
+        //         return { ...item, id: item.value, realId: item.id }
+        //     })
+        //     setBoards(boardData)
+        //     }
+        // })
     }
 
 
@@ -56,8 +56,11 @@ const StickyNote = () => {
     }, [])
 
     const onChangeNotes = (notes) =>{
-        console.log("notes: ", notes)
         setNotes(notes);
+    }
+
+    const onSaveNotes = (notes) =>{ // not working
+        console.log("notes: ", notes)
     }
 
 
@@ -66,6 +69,7 @@ const StickyNote = () => {
             <ReactStickies
                 notes={notes}
                 onChange={onChangeNotes}
+                onSave={onSaveNotes}
             />
         </div>
     )

@@ -1,5 +1,6 @@
 // ** Icons Import
-import { Mail, MessageSquare, CheckSquare, Calendar, FileText, Circle, ShoppingCart, User, Shield, Layers } from 'react-feather'
+import { Mail, MessageSquare, CheckSquare, Calendar, FileText, Circle, ShoppingCart, User, Shield,
+  File, Layers, DollarSign } from 'react-feather'
 
   let permission = {
     user: {create: false, edit: false, delete: false},
@@ -210,10 +211,10 @@ if (permission && permission.report && permission.report.view) {
 if (permission && permission.report && permission.report.view) {
   appRoutes.push(
   {
-    id: 'sticky_notes',
-    title: 'Sticky Notes',
-    icon: <Shield size={20} />,
-    navLink: `${process.env.PUBLIC_URL}/apps/sticky_notes`
+    id: 'billing_plan',
+    title: 'Plan',
+    icon: <DollarSign size={20} />,
+    navLink: `${process.env.PUBLIC_URL}/apps/billing_plan`
   })
 }
 

@@ -16,6 +16,7 @@ import { Facebook, Twitter, Mail, GitHub } from 'react-feather'
 
 // ** Context
 import { AbilityContext } from '@src/utility/context/Can'
+import toast from 'react-hot-toast'
 
 // ** Custom Components
 import InputPasswordToggle from '@components/input-password-toggle'
@@ -25,11 +26,13 @@ import { Row, Col, CardTitle, CardText, Label, Button, Form, Input, FormFeedback
 
 // ** Styles
 import '@styles/react/pages/page-authentication.scss'
+import { processSignup } from '../../../services/Apis'
 
 const defaultValues = {
   email: '',
   terms: false,
-  username: '',
+  first_name: '',
+  last_name: '',
   password: ''
 }
 
@@ -50,25 +53,15 @@ const Register = () => {
     source = require(`@src/assets/images/pages/${illustration}`).default
 
   const onSubmit = data => {
-    const tempData = { ...data }
-    delete tempData.terms
-    if (Object.values(tempData).every(field => field.length > 0) && data.terms === true) {
-      const { username, email, password } = data
-      useJwt
-        .register({ username, email, password })
-        .then(res => {
-          if (res.data.error) {
-            for (const property in res.data.error) {
-              if (res.data.error[property] !== null) {
-                setError(property, {
-                  type: 'manual',
-                  message: res.data.error[property]
-                })
-              }
-            }
+    
+    if(data.terms === true){
+      processSignup(data)
+        .then(res => {debugger
+          if (res.response.code != 0) {
+            toast(t => (res.response.msg))
           } else {
             const data = { ...res.data.user, accessToken: res.data.accessToken }
-            ability.update(res.data.user.ability)
+            ability.update(res.response.data.user.ability)
             dispatch(handleLogin(data))
             navigate('/')
           }
@@ -160,17 +153,31 @@ const Register = () => {
             <Form action='/' className='auth-register-form mt-2' onSubmit={handleSubmit(onSubmit)}>
               <div className='mb-1'>
                 <Label className='form-label' for='register-username'>
-                  Username
+                  First Name
                 </Label>
                 <Controller
-                  id='username'
-                  name='username'
+                  id='first_name'
+                  name='first_name'
                   control={control}
                   render={({ field }) => (
-                    <Input autoFocus placeholder='johndoe' invalid={errors.username && true} {...field} />
+                    <Input autoFocus placeholder='johndoe' invalid={errors.first_name && true} {...field} />
                   )}
                 />
-                {errors.username ? <FormFeedback>{errors.username.message}</FormFeedback> : null}
+                {errors.first_name ? <FormFeedback>{errors.first_name.message}</FormFeedback> : null}
+              </div>
+              <div className='mb-1'>
+                <Label className='form-label' for='register-username'>
+                  Last Name
+                </Label>
+                <Controller
+                  id='last_name'
+                  name='last_name'
+                  control={control}
+                  render={({ field }) => (
+                    <Input autoFocus placeholder='johndoe' invalid={errors.last_name && true} {...field} />
+                  )}
+                />
+                {errors.last_name ? <FormFeedback>{errors.last_name.message}</FormFeedback> : null}
               </div>
               <div className='mb-1'>
                 <Label className='form-label' for='register-email'>

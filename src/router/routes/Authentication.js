@@ -10,6 +10,8 @@ const RegisterBasic = lazy(() => import('../../views/pages/authentication/Regist
 const RegisterCover = lazy(() => import('../../views/pages/authentication/RegisterCover'))
 const DemoCover = lazy(() => import('../../views/pages/authentication/DemoCover'))
 
+const GettingKnowQuestions = lazy(() => import('../../views/pages/getting-know-questions'))
+
 const RegisterMultiSteps = lazy(() => import('../../views/pages/authentication/register-multi-steps'))
 
 const ForgotPassword = lazy(() => import('../../views/pages/authentication/ForgotPassword'))
@@ -127,6 +129,13 @@ const AuthenticationRoutes = [
   {
     path: `${process.env.PUBLIC_URL}/pages/reset-password-basic`,
     element: <ResetPasswordBasic />,
+    meta: {
+      layout: 'blank'
+    }
+  },
+  {
+    path: `${process.env.PUBLIC_URL}/pages/getting-know-questions`,
+    element: <GettingKnowQuestions />,
     meta: {
       layout: 'blank'
     }

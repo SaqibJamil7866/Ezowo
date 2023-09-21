@@ -2,11 +2,12 @@
 // import IntlDropdown from './IntlDropdown'
 // import CartDropdown from './CartDropdown'
 import UserDropdown from './UserDropdown'
+import { useNavigate } from 'react-router-dom'
 // import NavbarSearch from './NavbarSearch'
 import NotificationDropdown from './NotificationDropdown'
 
 // ** Third Party Components
-import { Sun, Moon } from 'react-feather'
+import { Sun, Moon, File } from 'react-feather'
 
 // ** Reactstrap Imports
 import { NavItem, NavLink } from 'reactstrap'
@@ -14,6 +15,7 @@ import { NavItem, NavLink } from 'reactstrap'
 const NavbarUser = props => {
   // ** Props
   const { skin, setSkin } = props
+  const navigate = useNavigate()
 
   // ** Function to toggle Theme (Light/Dark)
   const ThemeToggler = () => {
@@ -24,9 +26,18 @@ const NavbarUser = props => {
     }
   }
 
+  const openStickyNotes = () => {
+    navigate(`${process.env.PUBLIC_URL}/apps/sticky_notes`)
+  }
+
   return (
     <ul className='nav navbar-nav align-items-center ms-auto'>
       {/* <IntlDropdown /> */}
+      <NavItem className='d-none d-lg-block'>
+        <NavLink className='nav-link-style'>
+          <File  className='ficon' onClick={()=>openStickyNotes()}  />
+        </NavLink >
+      </NavItem>
       <NavItem className='d-none d-lg-block'>
         <NavLink className='nav-link-style'>
           <ThemeToggler />
