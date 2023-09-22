@@ -46,7 +46,7 @@ const AnnouncementLine = props => {
                       [item.metaClassName]: item.metaClassName
                     })}
                   >
-                    {item.meta}
+                    {item.meta} {item.timeAgo}
                   </span>
                 ) : null}
               </div>

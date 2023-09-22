@@ -75,7 +75,6 @@ const KanbanBoard = props => {
             style={{backgroundColor: '#ededed', padding: '1px 10px', borderRadius: '10px'}}
           >
             {tasks.map((task, index) => {
-              {console.log('task: ', task.boardId, board.id)}
               if (task.boardId === board.id) {
                 return (
                   <KanbanTasks

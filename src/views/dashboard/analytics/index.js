@@ -139,7 +139,7 @@ const AnalyticsDashboard = () => {
           <Card className='card-user-timeline'>
               <CardHeader>
                 <div className='d-flex align-items-center'>
-                  <List className='user-timeline-title-icon' />
+                  {/* <List className='user-timeline-title-icon' /> */}
                   <CardTitle tag='h4'>Announcements</CardTitle>
                 </div>
               </CardHeader>

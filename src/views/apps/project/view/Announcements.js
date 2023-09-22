@@ -8,6 +8,7 @@ import AnnouncementTimeline from '@components/timeline/AnnouncementLine'
 
 import { getAnnouncements } from "../../../../services/Apis"
 import moment from 'moment'
+import ReactTimeAgo from 'react-time-ago'
 
 // const data = [
 //   {
@@ -55,7 +56,7 @@ const Announcements = ({userId}) => {
   const [announcements, setAnnouncements] = useState([])
   const formatData = (data) => {
     const jsonData = data.map((item) => {
-      return { ...item, meta: `Sent by ${item?.user?.first_name} at ${moment(item.created).format('DD/MM/YYYY hh:mm A')}`, title: item.title, content: item.details, color: '' }
+      return { ...item, meta: `Sent by ${item?.user?.first_name}`, timeAgo: <ReactTimeAgo date={item.created} />, title: item.title, content: item.details, color: '' }
     })
     setAnnouncements(jsonData)
   }
