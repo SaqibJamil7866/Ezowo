@@ -12,9 +12,11 @@ import calendar from '@src/views/apps/calendar/store'
 import ecommerce from '@src/views/apps/ecommerce/store'
 import dataTables from '@src/views/tables/data-tables/store'
 import permissions from '@src/views/apps/roles-permissions/store'
+import home from './home'
 
 const rootReducer = {
   auth,
+  home,
   todo,
   chat,
   email,

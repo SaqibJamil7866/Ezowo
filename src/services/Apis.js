@@ -405,6 +405,15 @@ const getAnnouncements = async (params) => {
   }
 }
 
+const saveAnnouncement = async (data) => {
+  try {
+    const response = await Services.postData("project-announcements/add", data)
+    return await response.json()
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 const getTaskDetail = async (params) => {
   const queryData = params
   try {
@@ -469,7 +478,7 @@ export {
   getProjectTasksCountByStatus,
   getProjectActivities,
   getAnnouncements,
-
+  saveAnnouncement,
   getTaskDetail,
   saveTaskComment,
   deleteTaskComment

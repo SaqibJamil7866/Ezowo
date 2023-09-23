@@ -1,7 +1,7 @@
 // ** React Imports
-import { useContext, lazy } from 'react'
+import { useContext, lazy, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { List } from 'react-feather'
+import { List, Plus } from 'react-feather'
 import { Row, Col, Card, CardHeader, CardTitle, CardBody, Modal, ModalHeader, ModalBody, ModalFooter,
   Button } from 'reactstrap'
 // ** Custom Components
@@ -11,9 +11,6 @@ import { Row, Col, Card, CardHeader, CardTitle, CardBody, Modal, ModalHeader, Mo
 
 import { ThemeColors } from '@src/utility/context/ThemeColors'
 
-import InvoiceList from '@src/views/apps/invoice/list'
-import Sales from '@src/views/ui-elements/cards/analytics/Sales'
-import CardAppDesign from '@src/views/ui-elements/cards/advance/CardAppDesign'
 import UserTracker from './UserTracker'
 import CardCongratulations from '@src/views/ui-elements/cards/advance/CardCongratulations'
 
@@ -29,15 +26,20 @@ import Announcements from '../../apps/project/view/Announcements'
 import DashboardTasks from './DashboardTasks'
 import { handleStickyNotes } from '@store/navbar'
 
+const AnnouncementForm = lazy(() => import('../../announcements'))
 const StickyNotes = lazy(() => import('../../apps/sticky-notes'))
 
 const AnalyticsDashboard = () => {
   // ** Context
   const { colors } = useContext(ThemeColors);
   const dispatch = useDispatch();
-  const store = useSelector(state => state.navbar);
+  const store = useSelector(state => state);
 
-  const userId = JSON.parse(localStorage?.userData)?.id || 0
+  const userId = JSON.parse(localStorage?.userData)?.id || 0;
+
+  const handleAnnouncements = (val) => {
+    dispatch({type: 'home/setAnnouncementModalState', payload: {isOpen: val}})
+  }
 
   // ** Vars
   // const avatarGroupArr = [
@@ -138,9 +140,15 @@ const AnalyticsDashboard = () => {
           </Card> */}
           <Card className='card-user-timeline'>
               <CardHeader>
-                <div className='d-flex align-items-center'>
+                <div className='d-flex align-items-center width-full justify-content-between'>
                   {/* <List className='user-timeline-title-icon' /> */}
-                  <CardTitle tag='h4'>Announcements</CardTitle>
+                  <CardTitle tag='h4'>
+                    Announcements
+                  </CardTitle>
+                  <Button color="primary" onClick={() => handleAnnouncements(true)}>
+                    {/* <Plus />  */}
+                    Add Announcements
+                  </Button>
                 </div>
               </CardHeader>
               <CardBody>
@@ -191,7 +199,7 @@ const AnalyticsDashboard = () => {
 
       {/* Stick Notes modal */}
       <Modal
-        isOpen={store.isOpenStickyNotes}
+        isOpen={store.navbar.isOpenStickyNotes}
         scrollable={true}
         size='lg'
         className='modal-dialog-centered'
@@ -206,6 +214,18 @@ const AnalyticsDashboard = () => {
             Cancel
           </Button>
         </ModalFooter>
+      </Modal>
+
+      {/* Announcement Modal */}
+      <Modal
+        isOpen={store.home.announcementModal?.isOpen}
+        scrollable={true}
+        size='lg'
+        className='modal-dialog-centered'
+        onClosed={() => handleAnnouncements(false)}
+      >
+        <ModalHeader>Announcement</ModalHeader>
+        <AnnouncementForm fromWhere="popup"  handleClose={() => handleAnnouncements(false)} />
       </Modal>
     </div>
   )

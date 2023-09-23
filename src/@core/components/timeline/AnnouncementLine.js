@@ -1,10 +1,13 @@
 // ** Third Party Components
 import Proptypes from 'prop-types'
 import classnames from 'classnames'
+import { useDispatch } from 'react-redux'
+
 
 const AnnouncementLine = props => {
   // ** Props
   const { data, tag, className } = props
+  const dispatch = useDispatch();
 
   // ** Custom Tagg
   const Tag = tag ? tag : 'ul'
@@ -39,7 +42,7 @@ const AnnouncementLine = props => {
                   'mb-sm-0 mb-1': item.meta
                 })}
               >
-                <h6>{item.title}</h6>
+                <h6 className='link-primary pointer' onClick={()=>dispatch({type:'home/setAnnouncementModalState', payload:{isOpen: true, ...item}})}>{item.title}</h6>
                 {item.meta ? (
                   <span
                     className={classnames('timeline-event-time', {

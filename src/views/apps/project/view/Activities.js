@@ -91,7 +91,7 @@ const Activities = ({projectId, userId, limit, comingFrom}) => {
     const jsonData = data.filter(function (dt) {
         return dt.entity !== "ProjectAnnouncements"
       }).map((item) => {
-        return { ...item, meta: <ReactTimeAgo date={item.created} />, title: `${formatEntity(item.entity)} ${item.action}d`, content: `${item?.actor?.first_name  } ${ item.actor?.last_name  } ${item.action  }d a ${formatEntity(item.entity)}`, color: formatColor(item.action) }
+        return { ...item, meta: <ReactTimeAgo date={new Date(item.created)} />, title: `${formatEntity(item.entity)} ${item.action}d`, content: `${item?.actor?.first_name  } ${ item.actor?.last_name  } ${item.action  }d a ${formatEntity(item.entity)}`, color: formatColor(item.action) }
     })
     setActivities(jsonData)
   }

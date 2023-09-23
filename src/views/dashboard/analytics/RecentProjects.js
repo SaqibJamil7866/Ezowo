@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import {useState, useEffect} from 'react'
 import { getFormattedDate } from '@utils'
 // ** Custom Components
@@ -241,28 +242,26 @@ const formatTeam = (team) => {
 
 const RecentProjects = () => {
 
-  const [projects, setProjects] = useState([])
+  const dispatch = useDispatch()
+  const store = useSelector(state => state.home);
 
   const fetchProjects = () => {
     const params = {
       direction: 'desc',
       sort: 'id',
-      limit: 7,
       active: 1
     }
-    // console.table(params) 
-    // return
 
     try {
       getAllProjects(params).then((res) => {
         const result = res?.response
-        // console.error('ALL Projects ', result)
         if (
           result &&
           (result.code === 200 || result.code === 400) &&
           result.data
         ) {
-          setProjects(result.data)
+          // setProjects(result.data)
+          dispatch({type:'home/setProjects', payload: result.data})
         }
       })
     } catch (error) {
@@ -282,7 +281,7 @@ const RecentProjects = () => {
 
 
   return (
-    projects && projects.length ? <Table responsive>
+    store.projects && store.projects.length ? <Table responsive>
     <thead>
       <tr>
         <th>Project</th>
@@ -294,7 +293,7 @@ const RecentProjects = () => {
       </tr>
     </thead>
     <tbody>
-    {projects.map((item, index) => {
+    {store.projects.map((item, index) => {
         return (
           <tr className={item?.color || 'table-primary'} key={`projects${index}`}>
             <td>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Card, CardHeader, CardTitle, CardBody, Row, Col, Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap'
 // import Avatar from '@components/avatar'
 import AnnouncementTimeline from '@components/timeline/AnnouncementLine'
@@ -7,8 +8,6 @@ import AnnouncementTimeline from '@components/timeline/AnnouncementLine'
 // import { Card, CardHeader, CardTitle, CardBody } from 'reactstrap'
 
 import { getAnnouncements } from "../../../../services/Apis"
-import moment from 'moment'
-import ReactTimeAgo from 'react-time-ago'
 
 // const data = [
 //   {
@@ -53,22 +52,16 @@ import ReactTimeAgo from 'react-time-ago'
 
 const Announcements = ({userId}) => {
 
-  const [announcements, setAnnouncements] = useState([])
-  const formatData = (data) => {
-    const jsonData = data.map((item) => {
-      return { ...item, meta: `Sent by ${item?.user?.first_name}`, timeAgo: <ReactTimeAgo date={item.created} />, title: item.title, content: item.details, color: '' }
-    })
-    setAnnouncements(jsonData)
-  }
+  // const [announcements, setAnnouncements] = useState([]);
+  const dispatch = useDispatch();
+  const store = useSelector(state => state.home);
 
   const fetchAnnouncements = () => {
     const params = {}
     if (userId) {
       params['user_id'] = userId
     }
-    // if (limit) {
-    //   params['limit'] = limit
-    // }
+
 
     getAnnouncements(params).then((res) => {
       const result = res.response
@@ -77,8 +70,7 @@ const Announcements = ({userId}) => {
         (result.code === 200 || result.code === 400) &&
         result.data
       ) {
-        formatData(result.data)
-        // setAnnouncements(data)
+        dispatch({type: 'home/setAnnouncements', payload: result.data})
       }
     })
   }
@@ -90,13 +82,12 @@ const Announcements = ({userId}) => {
   return (
     <Row>
       <Col lg='12' md='12' sm='12' style={{maxHeight: '118px', height: 'calc(100% - 4.45rem) !important', overflowY: 'scroll'}}>
-        
         {/* <Card>
           <CardHeader>
             <CardTitle tag='h4'>Announcements</CardTitle>
           </CardHeader>
           <CardBody className='pt-1'> */}
-            {announcements && announcements?.length ? <AnnouncementTimeline data={announcements} className='ms-50' /> : <>No announcements found.</>}
+            {store.announcements && store.announcements?.length ? <AnnouncementTimeline data={store.announcements} className='ms-50' /> : <>No announcements found.</>}
             
           {/* </CardBody>
         </Card> */}
