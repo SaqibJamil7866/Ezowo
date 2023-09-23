@@ -414,6 +414,15 @@ const saveAnnouncement = async (data) => {
   }
 }
 
+const deleteAnnouncement = async (data) => {
+  try {
+    const response = await Services.postData("project-announcements/delete", data)
+    return await response.json()
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 const getTaskDetail = async (params) => {
   const queryData = params
   try {
@@ -477,8 +486,11 @@ export {
   getProjectTeamTaskStatus,
   getProjectTasksCountByStatus,
   getProjectActivities,
+
   getAnnouncements,
   saveAnnouncement,
+  deleteAnnouncement,
+
   getTaskDetail,
   saveTaskComment,
   deleteTaskComment

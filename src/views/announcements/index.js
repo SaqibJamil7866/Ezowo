@@ -9,7 +9,7 @@ import _ from 'lodash';
 // ** Reactstrap Imports
 import { Row, Col, Label, Button, Form, ModalBody, ModalFooter} from 'reactstrap'
 
-import { getAllProjects, saveAnnouncement } from '../../services/Apis'
+import { deleteAnnouncement, getAllProjects, saveAnnouncement } from '../../services/Apis'
 import { InputField } from '../components/reacthookFields/inputField'
 import { SelectField } from '../components/reacthookFields/selectField'
 import { useEffect, useState } from 'react'
@@ -30,6 +30,7 @@ const AnnouncementForm = ({fromWhere, handleClose}) => {
         control,
         setError,
         setValue,
+        getValues,
         handleSubmit,
         reset,
         formState: { errors }
@@ -50,27 +51,44 @@ const AnnouncementForm = ({fromWhere, handleClose}) => {
         }
     }, [store, store.projects])
 
-  const onSubmit = data => {
-    
-    saveAnnouncement(data)
-    .then(res => {
-        toast(t => (res.response.msg));
-        if(res.response.code == 200) {
-            let announcements = _.cloneDeep(store.announcements);
-            const foundAnnouncement = announcements.find((announcement) => announcement.id == res.response.data.id);
-            if(foundAnnouncement) {
-                const index = announcements.indexOf(foundAnnouncement);
-                announcements[index] = res.response.data;
+    const handleDelete = () => {
+        const data = {id: getValues('id')}
+        deleteAnnouncement(data).then(res => {
+            toast(t => (res.response.msg));
+            if(res.response.code == 200) {
+                let announcements = _.cloneDeep(store.announcements);
+                const foundAnnouncementIndex = announcements.findIndex((announcement) => announcement.id == data.id);
+                if(foundAnnouncementIndex > -1) {
+                    announcements.splice(foundAnnouncementIndex,1)
+                }
+                dispatch({type: 'home/setAnnouncements', payload: [...announcements]})
+                handleClose();
             }
-            else{
-                announcements.unshift(res.response.data);
+        })
+        .catch(err => console.log(err))
+    }
+
+    const onSubmit = data => {
+        
+        saveAnnouncement(data)
+        .then(res => {
+            toast(t => (res.response.msg));
+            if(res.response.code == 200) {
+                let announcements = _.cloneDeep(store.announcements);
+                const foundAnnouncement = announcements.find((announcement) => announcement.id == res.response.data.id);
+                if(foundAnnouncement) {
+                    const index = announcements.indexOf(foundAnnouncement);
+                    announcements[index] = res.response.data;
+                }
+                else{
+                    announcements.unshift(res.response.data);
+                }
+                dispatch({type: 'home/setAnnouncements', payload: [...announcements]})
+                handleClose();
             }
-            dispatch({type: 'home/setAnnouncements', payload: [...announcements]})
-            handleClose();
-        }
-    })
-    .catch(err => console.log(err))
-  }
+        })
+        .catch(err => console.log(err))
+    }
 
   return (
     <>
@@ -144,6 +162,12 @@ const AnnouncementForm = ({fromWhere, handleClose}) => {
             {fromWhere == 'popup' ?
                 <Button color='flat-danger' onClick={() => handleClose()}>
                     Cancel
+                </Button>
+                : null
+            }
+            {fromWhere == 'popup' && getValues('id') ?
+                <Button color="danger" onClick={() => handleDelete()}>
+                    Delete
                 </Button>
                 : null
             }
