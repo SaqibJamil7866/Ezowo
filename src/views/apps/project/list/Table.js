@@ -208,7 +208,6 @@ const ProjectsList = ({fromWhere}) => {
   const deleteProject = (id) => {
     deleteRow('projects/delete', {id})
     .then(res => {
-      console.error(' RESPONSE ', res)
       if (res.response.code === 200) {
         fetchProjects()
       } else {
@@ -534,7 +533,7 @@ const ProjectsList = ({fromWhere}) => {
                 minWidth: '100px',
                 cell: row => (
                   permission.project.edit || permission.project.delete ? <div className='column-action'>
-                    <UncontrolledDropdown>
+                    <UncontrolledDropdown direction="end">
                       <DropdownToggle tag='div' className='btn btn-sm'>
                         <MoreVertical size={14} className='cursor-pointer' />
                       </DropdownToggle>

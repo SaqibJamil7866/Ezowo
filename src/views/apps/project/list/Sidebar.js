@@ -11,13 +11,14 @@ import '@styles/react/libs/flatpickr/flatpickr.scss'
 import Select, { components } from 'react-select'
 
 import { selectThemeColors } from '@utils'
-import { addProject } from "../../../../services/Apis"
+import { addProject, getAllProjects } from "../../../../services/Apis"
 import moment from 'moment'
 
 const SidebarNewUsers = ({ fetchProjects, open, toggleSidebar, taskItem, users, fromWhere }) => {
   
   const [manager, setManager] = useState({})
   const [team, setTeam] = useState([])
+  const [templates, setTemplates] = useState([])
   const [template, setTemplate] = useState({is_template: false})
   const [showPicker, setShowPicker] = useState(false)
 
@@ -43,29 +44,57 @@ const SidebarNewUsers = ({ fetchProjects, open, toggleSidebar, taskItem, users, 
   const selectOptions = users.map((item) => {
     return { ...item, value: item.id, label: `${item.first_name  } ${  item.last_name}`, img: img1 }
   })
+
+  const populateProjectForm = (task) => {
+    
+    setDescription(task?.description)
+    setColor(task?.color)
+    setStartDate(task?.start_date)
+    setEndDate(task?.end_date)
+    if (task?.manager && task?.manager?.id) {
+      const manager = selectOptions.filter(item => item.id === task?.manager?.id)
+      if (manager && manager[0]) {
+        setManager(manager[0])
+      }
+    }
+
+    const data = task?.users.map((item) => {
+      return { ...item, value: item.id, label: `${item.first_name  } ${  item.last_name}`, img: img1 }
+    })
+    setTeam(data || [])
+  }
   
   useEffect(() => {
     if (taskItem && taskItem?.title) {
-
-      setTitle(taskItem?.title)
-      setDescription(taskItem?.description)
-      setTemplate({is_template: taskItem?.is_template, name:  taskItem?.name})
-      setColor(taskItem?.color)
-      setStartDate(taskItem?.start_date)
-      setEndDate(taskItem?.end_date)
-      if (taskItem?.manager && taskItem?.manager?.id) {
-        const manager = selectOptions.filter(item => item.id === taskItem?.manager?.id)
-        if (manager && manager[0]) {
-          setManager(manager[0])
-        }
-      }
-
-      const data = taskItem?.users.map((item) => {
-        return { ...item, value: item.id, label: `${item.first_name  } ${  item.last_name}`, img: img1 }
-      })
-      setTeam(data || [])
+      setTitle(taskItem?.title);
+      setTemplate({is_template: taskItem?.is_template})
+      populateProjectForm(taskItem)
     }
   }, [taskItem])
+
+  const fetTemplates = () => {
+    const params = {
+      is_template: 1,
+      active: 1 
+    }
+
+    getAllProjects(params).then((res) => {
+      const result = res?.response
+      if (
+        result &&
+        (result.code === 200 || result.code === 400) &&
+        result.data
+      ) {
+        setTemplates(result.data)
+      }
+    })
+  }
+
+  useEffect(()=>{
+    if(fromWhere != 'template'){
+      fetTemplates()
+    }
+  }, [fromWhere])
   
   // ** Function to handle form submit
   const onSubmit = (e) => {
@@ -127,9 +156,13 @@ const SidebarNewUsers = ({ fetchProjects, open, toggleSidebar, taskItem, users, 
   }
 
   const handleChangeComplete = (color, event) => {
-    console.log(color)
     setColor(color.hex)
     setShowPicker(false)
+  }
+
+  const onSelectTemplate = (item) => {
+    setTemplate({...template, label: item.title});
+    populateProjectForm(item);
   }
   
   return (
@@ -145,16 +178,25 @@ const SidebarNewUsers = ({ fetchProjects, open, toggleSidebar, taskItem, users, 
       <Form onSubmit={(e) => onSubmit(e)}>
         {fromWhere != 'template' ?
           <div className='mb-1'>
-            <div className='form-check form-check-inline'>
+            <div className='form-check form-check-inline pb-50'>
               <Input type='checkbox' id='saveAsTemplate' value={template.is_template} onChange={e => {
-                setTemplate({...template, is_template: e.target.checked})
+                setTemplate({...template, is_template: e.target.checked, label: ''})
               }} />
               <Label for='saveAsTemplate' className='form-check-label'>
                 Use Template
               </Label>
             </div>
             {template.is_template ?
-              <Input type='text' value={template.name} placeholder="Template Name" onChange={e => {setTemplate({...template, name: e.target.value})}} />
+              <Select
+                id='name'
+                isClearable={false}
+                className='react-select'
+                classNamePrefix='select'
+                options={templates?.map((item)=> {return {label: item.title, ...item}})}
+                value={template}
+                onChange={(item) => {onSelectTemplate(item)}}
+                theme={selectThemeColors}
+              />
               : null
             }
           </div>
