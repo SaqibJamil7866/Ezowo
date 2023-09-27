@@ -26,6 +26,9 @@ const EcommerceCheckout = lazy(() => import('../../views/apps/ecommerce/checkout
 const ProjectList = lazy(() => import('../../views/apps/project/list'))
 const ProjectView = lazy(() => import('../../views/apps/project/view'))
 
+const TemplateList = lazy(() => import('../../views/apps/project/templates'))
+
+
 const UserList = lazy(() => import('../../views/apps/user/list'))
 const UserView = lazy(() => import('../../views/apps/user/view'))
 
@@ -194,6 +197,10 @@ const AppRoutes = [
   {
     element: <ProjectList />,
     path: `${process.env.PUBLIC_URL}/apps/project/list`
+  },
+  {
+    element: <TemplateList />,
+    path: `${process.env.PUBLIC_URL}/apps/template`
   },
   {
     path: `${process.env.PUBLIC_URL}/apps/project/view`,

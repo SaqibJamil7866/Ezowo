@@ -33,7 +33,7 @@ import { getAllProjects, deleteRow, getAllUsers } from "../../../../services/Api
 
 // ** Table Header
 // const CustomHeader = ({ store, toggleSidebar, handlePerPage, rowsPerPage, handleFilter, searchTerm }) => {
-const CustomHeader = ({ permission, openAddBar, handlePerPage, rowsPerPage, handleFilter, searchTerm }) => {
+const CustomHeader = ({ permission, openAddBar, handlePerPage, rowsPerPage, handleFilter, searchTerm, fromWhere }) => {
   
   return (
     <div className='invoice-list-table-header w-100 me-1 ms-50 mt-2 mb-75'>
@@ -104,7 +104,7 @@ const CustomHeader = ({ permission, openAddBar, handlePerPage, rowsPerPage, hand
             </UncontrolledDropdown> */}
 
             {permission && permission.project.create && <Button className='add-new-user' color='primary' onClick={openAddBar}>
-              Add Project
+              Add {fromWhere == 'template' ? 'Template' : 'Project' }
             </Button>}
           </div>
         </Col>
@@ -118,10 +118,9 @@ const calculatePercentage = (completed, total) => {
   return Math.floor((completed / total) * 100)
 }
 
-const ProjectsList = () => {
+const ProjectsList = ({fromWhere}) => {
 
   const permission = getRoleBasedPermissions()
-  console.log(permission)
 
   const [projects, setProjects] = useState([])
   const [users, setUsers] = useState([])
@@ -153,7 +152,7 @@ const ProjectsList = () => {
   }
 
   const openEditBar = (row) => {
-    // console.log(row)
+    
     setSelectedTask(row)
     setTimeout(() => {
       toggleSidebar()
@@ -173,6 +172,7 @@ const ProjectsList = () => {
       sort: sortColumn,
       page: currentPage,
       limit: rowsPerPage,
+      is_template: fromWhere == 'template' ? 1 : 0,
       // role: currentRole.value,
       active: currentStatus.value ? 1 : 0
     }
@@ -180,8 +180,7 @@ const ProjectsList = () => {
     // return
 
     getAllProjects(params).then((res) => {
-      const result = res.response
-      // console.error('ALL Projects ', result)
+      const result = res?.response
       if (
         result &&
         (result.code === 200 || result.code === 400) &&
@@ -341,7 +340,7 @@ const ProjectsList = () => {
     <Fragment>
       <Card>
         <CardHeader>
-          <CardTitle tag='h4'>Projects</CardTitle>
+          <CardTitle tag='h4'>{fromWhere=="template" ? 'Templates' : 'Projects'}</CardTitle>
         </CardHeader>
         <CardBody>
           <Row>
@@ -426,7 +425,7 @@ const ProjectsList = () => {
             paginationServer
             columns={[
               {
-                name: 'Project',
+                name: fromWhere == 'template' ? 'Template' : 'Project',
                 sortable: true,
                 // minWidth: '300px',
                 sortField: 'fullName',
@@ -436,11 +435,15 @@ const ProjectsList = () => {
                     {/* {renderClient(row)} */}
                     {/* {row.title} */}
                     <div className='d-flex flex-column'>
-                      <Link
-                        to={`${process.env.PUBLIC_URL}/apps/project/${row.id}`}
-                        className='user_name text-truncate text-body'>
+                      {fromWhere == 'template' ? 
                         <span className='fw-bolder' style={{color: '#7367f0'}}>{row.title}</span>
-                      </Link>
+                        :
+                        <Link
+                          to={`${process.env.PUBLIC_URL}/apps/project/${row.id}`}
+                          className='user_name text-truncate text-body'>
+                          <span className='fw-bolder' style={{color: '#7367f0'}}>{row.title}</span>
+                        </Link>
+                      }
                       {/* <small className='text-truncate text-muted mb-0'>Project Category Here</small> */}
                     </div>
                   </div>
@@ -574,13 +577,16 @@ const ProjectsList = () => {
                 handleFilter={handleFilter}
                 handlePerPage={handlePerPage}
                 openAddBar={openAddBar}
+                fromWhere={fromWhere}
               />
             }
           />
         </div>
       </Card>
-
-      <Sidebar fetchProjects={fetchProjects} open={sidebarOpen} toggleSidebar={toggleSidebar} taskItem={selectedTask} users={users} />
+      {sidebarOpen ? 
+        <Sidebar fetchProjects={fetchProjects} open={sidebarOpen} toggleSidebar={toggleSidebar} taskItem={selectedTask} users={users} fromWhere={fromWhere} />
+        : null
+      }
     </Fragment>
   )
 }

@@ -14,11 +14,11 @@ import { selectThemeColors } from '@utils'
 import { addProject } from "../../../../services/Apis"
 import moment from 'moment'
 
-const SidebarNewUsers = ({ fetchProjects, open, toggleSidebar, taskItem, users }) => {
+const SidebarNewUsers = ({ fetchProjects, open, toggleSidebar, taskItem, users, fromWhere }) => {
   
   const [manager, setManager] = useState({})
   const [team, setTeam] = useState([])
-  const [isTemplate, setIsTemplate] = useState(false)
+  const [template, setTemplate] = useState({is_template: false})
   const [showPicker, setShowPicker] = useState(false)
 
 
@@ -49,7 +49,7 @@ const SidebarNewUsers = ({ fetchProjects, open, toggleSidebar, taskItem, users }
 
       setTitle(taskItem?.title)
       setDescription(taskItem?.description)
-      setIsTemplate(taskItem?.is_template)
+      setTemplate({is_template: taskItem?.is_template, name:  taskItem?.name})
       setColor(taskItem?.color)
       setStartDate(taskItem?.start_date)
       setEndDate(taskItem?.end_date)
@@ -84,16 +84,14 @@ const SidebarNewUsers = ({ fetchProjects, open, toggleSidebar, taskItem, users }
         color,
         active: 1, 
         status: 'active',
-        is_template: isTemplate
+        is_template: fromWhere == 'template' ? true : template.is_template,
       }
       if (taskItem && taskItem?.id) {
         postData['id'] = taskItem?.id
       }
-      // console.error(' POST ', postData)
-      // return
+
       addProject(postData)
         .then(res => {
-          console.error(' RESPONSE ', res)
           if (res.response.code === 200) {
             toggleSidebar()
             fetchProjects()
@@ -138,16 +136,33 @@ const SidebarNewUsers = ({ fetchProjects, open, toggleSidebar, taskItem, users }
     <Sidebar
       size='lg'
       open={open}
-      title='New Project'
+      title={fromWhere == 'template' ? 'New Template' : 'New Project'}
       headerClassName='mb-1'
       contentClassName='pt-0'
       toggleSidebar={toggleSidebar}
       onClosed={handleSidebarClosed}
     >
       <Form onSubmit={(e) => onSubmit(e)}>
+        {fromWhere != 'template' ?
+          <div className='mb-1'>
+            <div className='form-check form-check-inline'>
+              <Input type='checkbox' id='saveAsTemplate' value={template.is_template} onChange={e => {
+                setTemplate({...template, is_template: e.target.checked})
+              }} />
+              <Label for='saveAsTemplate' className='form-check-label'>
+                Use Template
+              </Label>
+            </div>
+            {template.is_template ?
+              <Input type='text' value={template.name} placeholder="Template Name" onChange={e => {setTemplate({...template, name: e.target.value})}} />
+              : null
+            }
+          </div>
+          : null
+        }
         <div className='mb-1'>
           <Label className='form-label' for='title'>
-            Project Name <span className='text-danger'>*</span>
+            {fromWhere == 'template' ? 'Template Name' : 'Project Name' }<span className='text-danger'>*</span>
           </Label>
           <Input name='title' id='title' placeholder='' value={title} onChange={(e) => setTitle(e.target.value)} />
         </div>
@@ -261,16 +276,6 @@ const SidebarNewUsers = ({ fetchProjects, open, toggleSidebar, taskItem, users }
             <Input name='color' id='color' value={color} onClick={() => setShowPicker(!showPicker)} placeholder='Click to chose color!' />
             {showPicker ? <TwitterPicker onChange={ handleChangeComplete } /> : null}
         </div>
-        {/* <div className='mb-1'>
-            <div className='form-check form-check-inline'>
-            <Input type='checkbox' id='saveAsTemplate' value={isTemplate} onChange={e => {
-                setIsTemplate(e.target.checked)
-            }} />
-            <Label for='saveAsTemplate' className='form-check-label'>
-                Save as Template
-            </Label>
-            </div>
-        </div> */}
         
         <Button type='submit' className='me-1' color='primary'>
           Submit

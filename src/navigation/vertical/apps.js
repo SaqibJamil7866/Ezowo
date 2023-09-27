@@ -1,6 +1,6 @@
 // ** Icons Import
 import { Mail, MessageSquare, CheckSquare, Calendar, FileText, Circle, ShoppingCart, User, Shield,
-  File, Layers, DollarSign } from 'react-feather'
+  File, Layers, DollarSign, Layout } from 'react-feather'
 
   let permission = {
     user: {create: false, edit: false, delete: false},
@@ -48,6 +48,12 @@ appRoutes = [
     title: 'Projects',
     icon: <Layers size={20} />,
     navLink: `${process.env.PUBLIC_URL}/apps/project/list`
+  },
+  {
+    id: 'templates',
+    title: 'Templates',
+    icon: <Layout size={20} />,
+    navLink: `${process.env.PUBLIC_URL}/apps/template`
   },
   {
     id: 'users',
