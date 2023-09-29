@@ -14,6 +14,7 @@ import Avatar from '@components/avatar'
 import { getTaskDetail, saveTaskComment, getAllTaskStatus, getAllUsers, getAllTaskPriorities, getAllTaskTypes, deleteTaskComment, addTask } from "../../../../services/Apis"
 
 import '@styles/react/pages/page-profile.scss'
+import ProjectSubTasks from './SubTasks'
 
 // const SelectComponent = ({ data, ...props }) => {
 //     return (
@@ -149,7 +150,7 @@ const TaskDetail = () => {
         }
         try {
           getTaskDetail(params).then((res) => {
-            const result = res.response
+            const result = res.response;
             if (
               result &&
               (result.code === 200 || result.code === 400) &&
@@ -278,32 +279,35 @@ const TaskDetail = () => {
                         </fieldset>
                         <Button color='primary' disabled={postCommentProgress} size='sm' onClick={postTaskComment}>
                         {postCommentProgress && <Spinner size='sm' />} Post Comment
-                        </Button>
+                          </Button>
                         {taskComment?.length ? <Button color='secondary' style={{marginLeft: '10px'}} size='sm' onClick={e => setTaskComment('')}>
-                        Cancel
+                          Cancel
                         </Button> : null}
+
+                        <ProjectSubTasks parentTask={taskItem} />
+                        {/* Comments list */}
                         {comments.map((comment, index) => (
-                        <div key={comment.id} className='d-flex align-items-start mb-1 mt-3'>
-                            <Avatar img={comment.avatar} className='mt-25 me-75' imgHeight='34' imgWidth='34' />
-                            <div className='profile-user-info w-100'>
-                            <div className='d-flex align-items-center justify-content-between'>
-                                <h6 className='mb-0'>{comment.commented_by_name || 'N/A'}</h6>
-                                <Badge color='primary' pill className='badge-glow align-middle'>
-                                    {comment.created}
-                                </Badge>
-                                
-                            </div>
-                            <div style={{width: '85%'}}>{comment.comment}</div>
-                            <div className='mt-1'>
-                                <Badge color='primary' pill className='cursor-pointer align-middle'>
-                                    Edit
-                                </Badge>
-                                <Badge disabled={deleteProgress} onClick={() => deleteComment(comment.id)} color='danger' pill className='cursor-pointer align-middle' style={{marginLeft: '10px'}}>
-                                {deleteProgress && <Spinner size='sm' />} Delete
-                                </Badge>
-                            </div>
-                            </div>
-                        </div>
+                          <div key={comment.id} className='d-flex align-items-start mb-1 mt-3'>
+                              <Avatar img={comment.avatar} className='mt-25 me-75' imgHeight='34' imgWidth='34' />
+                              <div className='profile-user-info w-100'>
+                              <div className='d-flex align-items-center justify-content-between'>
+                                  <h6 className='mb-0'>{comment.commented_by_name || 'N/A'}</h6>
+                                  <Badge color='primary' pill className='badge-glow align-middle'>
+                                      {comment.created}
+                                  </Badge>
+                                  
+                              </div>
+                              <div style={{width: '85%'}}>{comment.comment}</div>
+                              <div className='mt-1'>
+                                  <Badge color='primary' pill className='cursor-pointer align-middle'>
+                                      Edit
+                                  </Badge>
+                                  <Badge disabled={deleteProgress} onClick={() => deleteComment(comment.id)} color='danger' pill className='cursor-pointer align-middle' style={{marginLeft: '10px'}}>
+                                  {deleteProgress && <Spinner size='sm' />} Delete
+                                  </Badge>
+                              </div>
+                              </div>
+                          </div>
                         ))}
                     </CardBody>
                     </Card>

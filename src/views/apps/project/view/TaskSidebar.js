@@ -45,15 +45,13 @@ const defaultValues = {
 //   })
 // }
 
-const TaskSidebar = ({ fetchProjectTasks, open, toggleSidebar, taskItem, types, priorities, taskStatusData, users, projectId }) => {
+const TaskSidebar = ({ fetchProjectTasks, open, toggleSidebar, taskItem, types, priorities, taskStatusData, users, projectId, fromWhere }) => {
   
-  // const [manager, setManager] = useState([])
   const [type, setType] = useState({})
   const [priority, setPriority] = useState({})
   const [taskStatus, setTaskStatus] = useState({})
   const [asssignedTo, setAssignedTo] = useState({})
 
-  // const [desc, setDesc] = useState(EditorState.createEmpty())
 
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -142,15 +140,18 @@ const TaskSidebar = ({ fetchProjectTasks, open, toggleSidebar, taskItem, types, 
         priority_id: priority?.id, 
         status_id: taskStatus?.id, 
         assigned_to_id: asssignedTo?.id, 
-        start_date: moment(startDate).format('YYYY-MM-DD'), 
-        end_date: moment(endDate).format('YYYY-MM-DD'),  
+        start_date: fromWhere == 'sub_task' ? '' : moment(startDate).format('YYYY-MM-DD'), 
+        end_date: fromWhere == 'sub_task' ? '' : moment(endDate).format('YYYY-MM-DD'),  
         project_id: projectId
       }
       if (taskItem && taskItem?.id) {
         postData['id'] = taskItem?.id
       }
-      // console.error(' POST ', postData)
-      // return false
+      
+      if(fromWhere == 'sub_task'){
+        postData.parent_task_id = taskItem?.parentTask?.id
+      }
+ 
       addTask(postData)
         .then(res => {
           console.error(' RESPONSE ', res)
@@ -180,7 +181,7 @@ const TaskSidebar = ({ fetchProjectTasks, open, toggleSidebar, taskItem, types, 
     <Sidebar
       size='lg'
       open={open}
-      title='Task'
+      title={fromWhere == 'sub_task' ? 'Sub Task' : 'Task'}
       headerClassName='mb-1'
       contentClassName='pt-0'
       toggleSidebar={toggleSidebar}
@@ -189,7 +190,7 @@ const TaskSidebar = ({ fetchProjectTasks, open, toggleSidebar, taskItem, types, 
       <Form onSubmit={onSubmit}>
         <div className='mb-1'>
           <Label className='form-label' for='title'>
-            Task <span className='text-danger'>*</span>
+          {fromWhere == 'sub_task' ? 'Sub Task' : 'Task'} <span className='text-danger'>*</span>
           </Label>
             <Input id='title' value={title} placeholder='' onChange={(e) => setTitle(e.target.value)} />
         </div>
@@ -198,73 +199,64 @@ const TaskSidebar = ({ fetchProjectTasks, open, toggleSidebar, taskItem, types, 
             Description <span className='text-danger'>*</span>
           </Label>
             <Input id='description' value={description} type='textarea' rows='8' placeholder='Description' onChange={(e) => setDescription(e.target.value)} />
-            {/* <Editor
-              editorState={desc}
-              wrapperClassName='toolbar-bottom'
-              toolbar={{
-                options: ['inline', 'textAlign'],
-                inline: {
-                  inDropdown: false,
-                  options: ['bold', 'italic', 'underline']
-                }
-              }}
-              onEditorStateChange={data => {
-                setDesc(data)
-              }}
-            /> */}
         </div>
-        <div className='mb-1'>
-          <Label className="form-label" for='start_date'>
-              Start Date <span className='text-danger'>*</span>
-            </Label>
-            <Flatpickr
-              value={startDate}
-              id='start_date'
-              name='start_date'
-              className="form-control"
-              onChange={(date) => setStartDate(date[0])}
-              options={{
-                altInput: true,
-                altFormat: "F j, Y",
-                dateFormat: "Y-m-d"
-              }}
-            />
-        </div>
-        <div className='mb-1'>
-        <Label className="form-label" for='end_date'>
-            End Date <span className='text-danger'>*</span>
-          </Label>
-          <Flatpickr
-            value={endDate}
-            id='end_date'
-            name='end_date'
-            className="form-control"
-            onChange={(date) => setEndDate(date[0])}
-            options={{
-              altInput: true,
-              altFormat: "F j, Y",
-              dateFormat: "Y-m-d"
-            }}
-          />
-        </div>
-        <div className='mb-1'>
-          <Label className='form-label' for='taskType'>
-            Select Type <span className='text-danger'>*</span>
-          </Label>
-          <div className='mb-1'>
-            <Select
-            name='taskType'
-            id='taskType'
-            isClearable={false}
-            className='react-select'
-            classNamePrefix='select'
-            options={taskTypes}
-            value={type}
-            onChange={(item) => setType(item)}
-            theme={selectThemeColors}
-          />
-          </div>
-        </div>
+        {fromWhere != 'sub_task' ?
+          <>
+            <div className='mb-1'>
+              <Label className="form-label" for='start_date'>
+                  Start Date <span className='text-danger'>*</span>
+                </Label>
+                <Flatpickr
+                  value={startDate}
+                  id='start_date'
+                  name='start_date'
+                  className="form-control"
+                  onChange={(date) => setStartDate(date[0])}
+                  options={{
+                    altInput: true,
+                    altFormat: "F j, Y",
+                    dateFormat: "Y-m-d"
+                  }}
+                />
+            </div>
+            <div className='mb-1'>
+            <Label className="form-label" for='end_date'>
+                End Date <span className='text-danger'>*</span>
+              </Label>
+              <Flatpickr
+                value={endDate}
+                id='end_date'
+                name='end_date'
+                className="form-control"
+                onChange={(date) => setEndDate(date[0])}
+                options={{
+                  altInput: true,
+                  altFormat: "F j, Y",
+                  dateFormat: "Y-m-d"
+                }}
+              />
+            </div>
+            <div className='mb-1'>
+              <Label className='form-label' for='taskType'>
+                Select Type <span className='text-danger'>*</span>
+              </Label>
+              <div className='mb-1'>
+                <Select
+                name='taskType'
+                id='taskType'
+                isClearable={false}
+                className='react-select'
+                classNamePrefix='select'
+                options={taskTypes}
+                value={type}
+                onChange={(item) => setType(item)}
+                theme={selectThemeColors}
+              />
+              </div>
+            </div>
+          </>
+          : null
+        }
         <div className='mb-1'>
           <Label className='form-label' for='taskPriority'>
             Select Priority <span className='text-danger'>*</span>
@@ -283,39 +275,44 @@ const TaskSidebar = ({ fetchProjectTasks, open, toggleSidebar, taskItem, types, 
           />
           </div>
         </div>
-        <div className='mb-1'>
-          <Label className='form-label' for='taskStatus'>
-            Select Status <span className='text-danger'>*</span>
-          </Label>
-          <div className='mb-1'>
-            <Select
-            name='taskStatus'
-            id='taskStatus'
-            isClearable={false}
-            className='react-select'
-            classNamePrefix='select'
-            options={taskStatusOptions}
-            value={taskStatus}
-            onChange={(item) => setTaskStatus(item)}
-            theme={selectThemeColors}
-          />
-          </div>
-        </div>
-        <div className='mb-1'>
-          <Label className='form-label' for='assignedTo'>
-            Assigned To <span className='text-danger'>*</span>
-          </Label>
-          <Select
-            id='assignedTo'
-            isClearable={false}
-            className='react-select'
-            classNamePrefix='select'
-            options={userOptions}
-            value={asssignedTo}
-            onChange={(item) => setAssignedTo(item)}
-            theme={selectThemeColors}
-          />
-        </div>
+        {fromWhere != 'sub_task' ?
+          <>
+            <div className='mb-1'>
+              <Label className='form-label' for='taskStatus'>
+                Select Status <span className='text-danger'>*</span>
+              </Label>
+              <div className='mb-1'>
+                <Select
+                name='taskStatus'
+                id='taskStatus'
+                isClearable={false}
+                className='react-select'
+                classNamePrefix='select'
+                options={taskStatusOptions}
+                value={taskStatus}
+                onChange={(item) => setTaskStatus(item)}
+                theme={selectThemeColors}
+              />
+              </div>
+            </div>
+            <div className='mb-1'>
+              <Label className='form-label' for='assignedTo'>
+                Assigned To <span className='text-danger'>*</span>
+              </Label>
+              <Select
+                id='assignedTo'
+                isClearable={false}
+                className='react-select'
+                classNamePrefix='select'
+                options={userOptions}
+                value={asssignedTo}
+                onChange={(item) => setAssignedTo(item)}
+                theme={selectThemeColors}
+              />
+            </div>
+          </>
+          : null 
+        }
         <Button type='submit' className='me-1' color='primary'>
           Submit
         </Button>

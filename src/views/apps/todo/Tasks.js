@@ -48,7 +48,6 @@ const Tasks = props => {
     dispatch(selectTask(obj))
     handleTaskSidebar()
   }
-
   // ** Returns avatar color based on task tag
   // const resolveAvatarVariant = tags => {
   //   if (tags.includes('high')) return 'light-primary'
