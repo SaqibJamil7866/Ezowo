@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Row, Col, Card, Label, CardBody, CardTitle, CardHeader } from 'reactstrap'
+import { Row, Col, Card, Label, CardBody, CardTitle, CardHeader, Input } from 'reactstrap'
 import Select from 'react-select'
 import { selectThemeColors } from '@utils'
 import { Gantt, Task, EventOption, StylingOption, ViewMode, DisplayOption } from 'gantt-task-react'
@@ -8,7 +8,6 @@ import "gantt-task-react/dist/index.css"
 import { getAllProjects, getAllProjectTasks } from "../../../services/Apis"
 
 const GanttComponent = () => {
-
     const viewArray = [
         {label: ViewMode.Day, value: ViewMode.Day},
         {label: ViewMode.Week, value: ViewMode.Week},
@@ -38,6 +37,7 @@ const GanttComponent = () => {
     console.log(`On expander click Id:${  task.id}`)
     }
 
+
     const fetchProjectTasks = (obj) => {
         const params = {
           direction: 'desc',
@@ -61,7 +61,8 @@ const GanttComponent = () => {
                     progress: 25,
                     type: 'task',
                     project: `Project-${  obj.title  }-${  obj.id}`,
-                    displayOrder: parseInt(index + 2)
+                    displayOrder: parseInt(index + 2),
+                    dependencies: item.id == '29' ? ['Testing Full Task 28'] : [],
                 }
             })
             
@@ -73,10 +74,9 @@ const GanttComponent = () => {
                 progress: 60,
                 type: "project",
                 hideChildren: false,
-                displayOrder: 1
+                displayOrder: 1,
              })
             
-            console.log(data)
             setTasks(data)
           }
         })
@@ -109,6 +109,7 @@ const GanttComponent = () => {
         fetchProjects()
     }, [])
     
+
     return (
         <>
       <Card>
@@ -132,7 +133,7 @@ const GanttComponent = () => {
                 }}
               />
             </Col>
-            <Col md='2' xxl='1'>
+            <Col md='2' xxl='2'>
               <Label for='status-select'>Select View</Label>
               <Select
                 theme={selectThemeColors}
@@ -146,6 +147,14 @@ const GanttComponent = () => {
                     setView(data.value)
                 }}
               />
+            </Col>
+            <Col md='1' xxl='2'>
+              <div className='form-check mt30'>
+                <Input id='show_task_list' type='checkbox' defaultChecked={isChecked} onChange={()=>{setIsChecked(!isChecked)}} />
+                <Label className='form-check-label' for='show_task_list'>
+                  Show Task List
+                </Label>
+              </div>
             </Col>
           </Row>
         </CardBody>

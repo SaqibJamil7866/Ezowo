@@ -18,6 +18,28 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
 	width: 100%;
 }
 
+.mt30 {
+    margin-top: 30px;
+}
+
 .pointer{
 	cursor: pointer;
+}
+
+.count {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 25px;
+    height: 18px;
+    font-size: 12px;
+    font-weight: 400;
+    border-radius: 20px;
+    margin-left: 7px;
+    background-color: #e5d6d6;
+    padding: 0 5px;
+}
+
+.red {
+	color: var(--bs-danger)
 }

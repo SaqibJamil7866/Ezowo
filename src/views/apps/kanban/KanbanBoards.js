@@ -56,12 +56,19 @@ const KanbanBoard = props => {
     })
   }
 
+  const returnTaskCount = ()=> {
+    const filteredTasks = tasks.filter((task)=> task.boardId === board.id);
+    return filteredTasks.length;
+  }
+
+
   return (
     <Fragment key={index}>
       <div className='board-wrapper'>
         <div className='d-flex align-items-center justify-content-between'>
-          <div className='d-flex align-items-center board-header'>
-            <Input className='board-title' value={title} />
+          <div className='d-flex align-items-center board-header justify-content-between width-full'>
+            <Input className='board-title' value={title} /> 
+            <div className='count'>{returnTaskCount()}</div>
           </div>
         </div>
         <div>
@@ -86,7 +93,7 @@ const KanbanBoard = props => {
                 )
               } else {
                 return <Fragment key={`${task.boardId}-${index}`}>
-                  <Card className='task'>
+                  <Card className='task mt-25 mb-0'>
                   </Card>
                 </Fragment>
               }

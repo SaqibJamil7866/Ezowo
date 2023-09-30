@@ -1,8 +1,9 @@
 import { Badge, Card, CardBody } from 'reactstrap'
 import AvatarGroup from '@components/avatar-group'
 
-import { Paperclip, MessageSquare } from 'react-feather'
+import { Paperclip, MessageSquare, Calendar } from 'react-feather'
 import { taskPriorityMeta } from '@utils'
+import moment from 'moment'
 
 const KanbanTasks = props => {
   // ** Props
@@ -25,7 +26,7 @@ const KanbanTasks = props => {
   const renderAttachmentsComments = () => {
     if ((task.task_comments)) {
       return (
-        <div className='d-flex align-items-center' style={{marginLeft: '10px'}}>
+        <div className='d-flex align-items-center justify-content-between width-full' style={{marginLeft: '10px'}}>
           {/* {task.attachments && task.attachments.length ? (
             <div className='d-flex align-items-center cursor-pointer me-75'>
               <Paperclip size={16} className='me-25' />
@@ -36,6 +37,10 @@ const KanbanTasks = props => {
             <div className='d-flex align-items-center cursor-pointer'>
               <MessageSquare size={16} className='me-50' />
               <span>{task.task_comments.length}</span>
+            </div>
+            <div className='d-flex align-items-center cursor-pointer' title={`Due date: ${moment(task.end_date).format('MM/DD/YYYY')}`}>
+              <Calendar size={16} className='me-50' /> 
+              <span className='red'>{moment(task.end_date).format('MM/DD/YYYY')}</span>
             </div>
           {/* ) : null} */}
         </div>
@@ -67,7 +72,7 @@ const KanbanTasks = props => {
 
   return (
     <Card onClick={handleTaskClick} className='task' data-board-id={task.boardId} data-task-id={task.id}>
-      <CardBody data-task-id={task.id}>
+      <CardBody data-task-id={task.id} className="p-1">
         <span className='task-title'>{task.title} </span>
         {renderTaskFooter()}
       </CardBody>
