@@ -33,9 +33,45 @@ const GanttComponent = () => {
     }
     
     const handleExpanderClick = (task) => {
-    setTasks(tasks.map(t => (t.id === task.id ? task : t)))
-    console.log(`On expander click Id:${  task.id}`)
+      setTasks(tasks.map(t => (t.id === task.id ? task : t)))
+      console.log(`On expander click Id:${  task.id}`)
     }
+
+    const getStartEndDateForProject = (tasks, projectId) => {
+      const projectTasks = tasks.filter((t) => t.project === projectId);
+      let start = projectTasks[0].start;
+      let end = projectTasks[0].end;
+      for (let i = 0; i < projectTasks.length; i++) {
+        const task = projectTasks[i];
+        if (start.getTime() > task.start.getTime()) {
+          start = task.start;
+        }
+        if (end.getTime() < task.end.getTime()) {
+          end = task.end;
+        }
+      }
+      return [start, end];
+    }
+
+    const handleTaskChange = (task) => {
+      console.log("On date change Id:" + task);
+      let newTasks = tasks.map((t) => (t.id === task.id ? task : t));
+      if (task.project) {
+        const [start, end] = getStartEndDateForProject(newTasks, task.project);
+        const project =
+          newTasks[newTasks.findIndex((t) => t.id === task.project)];
+        if (
+          project.start.getTime() !== start.getTime() ||
+          project.end.getTime() !== end.getTime()
+        ) {
+          const changedProject = { ...project, start, end };
+          newTasks = newTasks.map((t) =>
+            t.id === task.project ? changedProject : t
+          );
+        }
+      }
+      setTasks(newTasks);
+    };
 
 
     const fetchProjectTasks = (obj) => {
@@ -108,7 +144,6 @@ const GanttComponent = () => {
     useEffect(() => {
         fetchProjects()
     }, [])
-    
 
     return (
         <>
@@ -167,6 +202,7 @@ const GanttComponent = () => {
             viewMode={view}
             listCellWidth={isChecked ? "155px" : ""}
             columnWidth={columnWidth}
+            onDateChange={handleTaskChange}
             onExpanderClick={handleExpanderClick}
             /> : null}
         </div>

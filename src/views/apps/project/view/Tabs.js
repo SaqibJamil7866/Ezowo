@@ -96,7 +96,7 @@ const UserTabs = ({ active, toggleTab }) => {
         </TabPane>
         <TabPane tabId='2'>
           {/* <SecurityTab /> */}
-          <ProjectTasks projectName={summaryData?.title} />
+          <ProjectTasks project={{title: summaryData?.title, id: projectId}} />
         </TabPane>
         <TabPane tabId='3'>
           {/* <BillingPlanTab /> */}

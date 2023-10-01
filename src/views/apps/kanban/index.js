@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react'
+import { lazy, useEffect, useState } from 'react'
 import Select from 'react-select'
 import { selectThemeColors } from '@utils'
 import KanbanBoards from './KanbanBoards'
 import '@styles/react/apps/app-kanban.scss'
 import { Row, Col, Card, Label, CardBody, CardTitle, CardHeader } from 'reactstrap'
 import { getAllTaskStatus, getAllProjectTasks, getAllProjects } from "../../../services/Apis"
+const ProjectTasks = lazy(() => import('../project/view/ProjectTasks'))
+
 
 const KanbanBoard = () => {
 
@@ -118,12 +120,10 @@ const KanbanBoard = () => {
   const renderTable = () => {
     return (
       <div>
-        Table View
+        <ProjectTasks project={currentProject}/>
       </div>
     )
   }
-
-  console.log("selectedView: ", selectedView)
 
   return boards.length ? (
     <>

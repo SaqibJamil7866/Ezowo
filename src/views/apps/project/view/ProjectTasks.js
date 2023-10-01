@@ -153,9 +153,10 @@ const CustomHeader = ({ permission, toggleSidebar, handlePerPage, rowsPerPage, h
   )
 }
 
-const ProjectTasks = ({projectName}) => {
+const ProjectTasks = ({project}) => {
   const permission = getRoleBasedPermissions()
-  const projectId = useParams().id
+  // const projectId = useParams().id
+  const projectId = project?.id;
   
   const [sort, setSort] = useState('desc')
   const [searchTerm, setSearchTerm] = useState('')
@@ -466,7 +467,7 @@ const ProjectTasks = ({projectName}) => {
                         className='user_name text-truncate text-body'
                         // onClick={() => store.dispatch(getUser(row.id))}
                       >
-                        <span className='text-truncate fw-bolder' style={{color: '#7367f0'}}>{`${getInitials(projectName)  }-${  row.id}`} {row.title}</span>
+                        <span className='text-truncate fw-bolder' style={{color: '#7367f0'}}>{`${getInitials(project?.title)  }-${  row.id}`} {row.title}</span>
                       </Link>
                       {/* <small className='text-muted'>{row.description}</small> */}
                     </div>
